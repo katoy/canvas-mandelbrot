@@ -1,0 +1,78 @@
+@charset "UTF-8";
+body, textarea {
+  font-family: "メイリオ", "Meiryo", verdana, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "Osaka", "ＭＳ Ｐゴシック", "MS PGothic", Sans-Serif;
+  text-align: center; }
+
+body {
+  background-color: #222222;
+  font-seze: 12px; }
+
+header {
+  padding: 0 2px; }
+
+footer {
+  font-size: 12px;
+  padding: 0 4px;
+  color: whitesmoke; }
+
+h1 {
+  font-size: 14px;
+  color: whitesmoke;
+  padding: 0 2px;
+  margin: 0; }
+
+#links {
+  font-size: 12px; }
+
+#sizes {
+  padding: 2px 0 0 0; }
+
+.status {
+  font-size: 11px;
+  color: whitesmoke;
+  pading: 0;
+  margin: 0; }
+
+/* ======================================================================= */
+/* == Presets Table */
+/* ======================================================================= */
+ul.presets {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0 0 0;
+  background-color: #444444;
+  border: solid 1px #555555;
+  display: inline-block;
+  background: -webkit-linear-gradient(top, #444444 0%, #222222 100%);
+  background: -moz-linear-gradient(top, #444444 0%, #222222 100%);
+  background: -o-linear-gradient(top, #444444 0%, #222222 100%);
+  background: linear-gradient(top, #444444 0%, #222222 100%); }
+ul.presets li {
+  display: inline-block;
+  margin: 2px; }
+ul.presets a {
+  display: inline-block;
+  background-color: #555555;
+  border: solid 1px #666666;
+  padding: 0 4px;
+  margin: 0;
+  text-align: center;
+  line-height: 15px;
+  color: #bbbbbb;
+  text-decoration: none; }
+ul.presets a:hover {
+  background: #888888;
+  border: solid 1px #cccccc;
+  color: white; }
+ul.presets a.selected {
+  background: #333333;
+  border: solid 1px #222222;
+  color: #aaaaaa; }
+ul.presets a.selected:hover {
+  background: #888888;
+  border: solid 1px #cccccc;
+  color: white; }
+
+/* ======================================================================= */
+/* == End of Presets Table */
+/* ======================================================================= */
