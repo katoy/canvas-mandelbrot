@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mandelbrot Set with Web Worker Threads</title>
+    <script src="jquery-1.6.1.min.js" type="text/javascript"></script>
+    
+    <script src="main.js" type="text/javascript"></script>
+    
+  </head>
+  
+  <body>
+    <div>
+      <a href="http://math.hws.edu/eck/jsdemo/jsMandelbrot.html">http://math.hws.edu/eck/jsdemo/jsMandelbrot.html</a>
+    </div>
+    <div>
+      coffee-scripts: <a href="main.coffee">main.coffee</a> <a href="MandelbrotWorker.coffee">MandelbrotWorker.coffee</a>
+      <br/>
+      $ coffee -cb main.coffee<br/>
+      $ coffee -cb MandelbrotWorker.coffee
+    </div>
+    
+    <noscript><p style="color:red">Sorry, this program requires JavaScript to run.</p></noscript>
+    
+    <h2>The Mandelbrot Set<br>Using Javascript Worker Threads</h2>
+    
+    <p><small>(If you really want to explore the Mandelbrot Set, try <a href="http://math.hws.edu/xJava/MB/index.html">xMandelbrot</a>.)</small></p>
+    
+    <p><b>To zoom in, drag on the picture with the left mouse button.<br>
+	To zoom out, hold down shift key while dragging.</b></p>
+    
+    <hr width=800 align=left>
+    
+    
+    <p id="message" style="color: #A00; font-weight: bold">&nbsp;</p>
+    
+    <div style="float:left;">
+      <canvas id="mbcanvas" width=600 height=480 style="background-color:rgb(230,230,255)"></canvas>
+    </div>
+    <div style="float:left; margin-left:30px;">
+      <p><button id="restoreButton">Restore Defaults</button></p>
+      <br>
+      <p><b>Thread Count:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="threadCountSelect">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+      </select></p>
+      <p><b>Maximum Iterations:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="maxIterSelect">
+          <option>25</option>
+          <option>50</option>
+          <option>100</option>
+          <option>250</option>
+          <option>500</option>
+          <option>1000</option>
+          <option>2500</option>
+          <option>5000</option>
+          <option>10000</option>
+          <option>Other...</option>
+	</select> <span id="otherMaxIter">&nbsp;</span></p>
+      <p><input type="checkbox" id="stretchPaletteCheckbox" checked> <label for="stretchPaletteCheckbox"><b>Stretch Palette</b></label></p>
+      <p id="paletteLengthPar" style="display:none"><b>Palette Length: </b>
+        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="paletteLengthSelect">
+          <option>50</option>
+          <option>100</option>
+          <option>250</option>
+          <option>1000</option>
+          <option>5000</option>
+          <option>Other...</option>
+        </select> <span id="otherPaletteLength">&nbsp;</span></p>
+      <!--</p> -->
+    </div>
+    <br clear="all">
+    <hr width=800 align=left noshade>
+    <p>The Mandelbrot set is the black area.  Zoom in along the boundry<br>
+      to see incredible detail.  You need to <b>increase Maximum Iterations<br></b>
+      as you zoom in.</p>
+    
+    <p>As you zoom in, some areas that should be colored are black,<br>
+      because the maximum number of iterations is too small.  Increasing<br>
+      the maximum iteratios might fill in some of the black area with color.</p>
+    
+    <p>If the color looks too uniform, trying turning off the "Stretch<br>
+      Palette" option and setting the palette to be less than the maximum<br>
+      number of iterations.  If the colors change too quickly, try<br>
+      increasing the palette length.</p>
+    
+    <p>If you zoom in too far, you will exceed the precision that is used<br>
+      for real numbers on the computer, and you'll see blocks of color instead<br>
+      of individually colored pixels.</p>
+    
+  </body>
+</html>

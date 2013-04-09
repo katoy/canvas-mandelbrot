@@ -16,6 +16,7 @@ http://www.atopon.org/mandel/ のソースコードをベースにしていま�
 
 [デモ](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public/main.html)　(chrome でアクセスすることを奨励)
 
+[デモ](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public2/jsMandelbrot.html)　(chrome でアクセスすることを奨励)
 
 参考サイト
 ==========
@@ -24,6 +25,7 @@ http://www.atopon.org/mandel/ のソースコードをベースにしていま�
 - [Mandelbrot Explorer](http://wolframhempel.com/2012/11/20/mandelbrot-set-explorer/)
 - [msdn:Mandelbrot Explorer](http://msdn.microsoft.com/ja-jp/library/jj649954%28v=vs.85%29.aspx)
 - [HTML5 Mandelbrot set & Julia sets](http://falcosoft.hu/html5_mandelbrot.html)
+- [The Mandelbrot Set Using Javascript Worker Threads](http://math.hws.edu/eck/jsdemo/jsMandelbrot.html)
 - [動画 Deepest Mandelbrot Set Zoom Animation ever - a New Record! 10^275 (2.1E275 or 2^915) ](http://www.youtube.com/watch?v=0jGaio87u3A&hd=1)
 
 TODO
