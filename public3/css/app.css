@@ -1,0 +1,46 @@
+@charset "UTF-8";
+body, textarea {
+  font-family: "メイリオ", "Meiryo", verdana, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "Osaka", "ＭＳ Ｐゴシック", "MS PGothic", Sans-Serif;
+  text-align: center;
+}
+
+body {
+  background-color: #666666;
+  font-seze: 12px;
+}
+
+header {
+  padding: 0 2px;
+}
+
+footer {
+  font-size: 12px;
+  padding: 0 4px;
+  color: whitesmoke;
+}
+
+h1 {
+  font-size: 14px;
+  color: whitesmoke;
+  padding: 0 2px;
+  margin: 0;
+}
+
+#links {
+  font-size: 12px;
+}
+
+#sizes {
+  padding: 2px 0 0 0;
+}
+
+.status {
+  font-size: 11px;
+  color: whitesmoke;
+  pading: 0;
+  margin: 0;
+}
+
+/* ======================================================================= */
+/* == End of Presets Table */
+/* ======================================================================= */

@@ -1,0 +1,206 @@
+var N = 512;
+var ESC_RADIUS = 20;
+var LOG2 = Math.log(2);
+var MAX_RANGE = 4;
+var MIN_RANGE = 0.00000095367431640625; // 2^-20
+
+var INSIDE_OUTSIDE = 0;
+var NUM_ITERATIONS = 1;
+var FRAC_ITERATIONS = 2;
+
+var canvas = null;
+var ctx = null;
+
+var range = [[-2, 2], [-2, 2]];
+var plotMode = null;
+var isAPointOutside = false;
+var colorChange = false;
+
+var mandelPlane = null;
+
+function isNaN(a) {
+    return a !== a;
+}
+
+var resetMandel = function(newPlotMode, newRange) {
+    if (!newPlotMode || isNaN(newPlotMode)) {
+        newPlotMode = 0;
+    }
+    if (!newRange || isNaN(newRange[0][0]) || isNaN(newRange[0][1]) ||
+        isNaN(newRange[1][0]) || isNaN(newRange[1][1])) {
+        newRange = range;
+    }
+    plotMode = newPlotMode;
+    range = newRange;
+    
+    isAPointOutside = false;
+    colorChange = false;
+    
+    mandelPlane = (function() {
+        var ret = [];
+        var dx, dy;
+        dx = (range[0][1] - range[0][0]) / N;
+        dy = (range[1][1] - range[1][0]) / N;
+        var c = [range[0][0], range[1][0]];
+        for (var j = 0; j < N; j++) {
+            c[0] = range[0][0];
+            for (var i = 0; i < N; i++) {
+                ret[i + j * N] = {
+                    'c': [c[0], c[1]],
+                    'z': [0, 0],
+                    'it': 0
+                };
+                c[0] += dx;
+            }
+            c[1] += dy;
+        }
+        return ret;
+    })();
+    
+    var dirLink = document.getElementById('dirLink');
+    dirLink.href = '#' + plotMode + ',' + range[0][0] + ',' + range[0][1] +
+        ',' + range[1][0] + ',' + range[1][1];
+};
+
+var step = (function() {
+    function f(z, c) {
+        return [z[0] * z[0] - z[1] * z[1] + c[0], 2 * z[0] * z[1] + c[1]];
+    }
+    
+    function abs(z) {
+        return Math.sqrt(z[0] * z[0] + z[1] * z[1]);
+    }
+    
+    function getColor(cpe) {
+        if (cpe.out) {
+            if (plotMode === INSIDE_OUTSIDE) {
+                return [255, 255, 255];
+            } else {
+                var zmod = Math.sqrt(cpe.z[0] * cpe.z[0] + cpe.z[1] * cpe.z[1]);
+                if (plotMode === NUM_ITERATIONS) {
+                    var iter = cpe.it;
+                } else {
+                    var iter = cpe.it + 1 - Math.log(Math.log(zmod)) / LOG2;
+                }
+                var l = 255 - 255 / iter;
+                return [l, l, l];
+            }
+        } else {
+            return [0, 0, 0];
+        }
+    }
+    
+    function walkCanvas() {           
+        if (isAPointOutside && !colorChange) {
+            return;
+        }
+        colorChange = false;
+        
+        var imd = ctx.getImageData(0, 0, N, N);
+        var cpa = imd.data;
+        
+        var idx1 = 0, idx2 = 0;
+        for (var i = 0; i < N * N; i++) {
+            var cpe = mandelPlane[i];
+            if (cpe.out) {
+                idx1 += 4;
+                continue;
+            }
+            
+            cpe.z = f(cpe.z, cpe.c);
+            cpe.it++;
+            if (abs(cpe.z) > ESC_RADIUS) {
+                isAPointOutside = true;
+                cpe.out = true;
+            }
+            
+            var color = getColor(cpe);
+            if (cpa[idx1] !== color[0]) {
+                colorChange = true;
+            }
+            cpa[idx1++] = color[0];
+            cpa[idx1++] = color[1];
+            cpa[idx1++] = color[2];
+            cpa[idx1++] = 255;
+        }
+        
+        ctx.putImageData(imd, 0, 0);
+    }
+    
+    return walkCanvas;
+})();
+
+function moveRange(p, r) {
+    if (r > MAX_RANGE) {
+        r = MAX_RANGE;
+    } else if (r < MIN_RANGE) {
+        r = MIN_RANGE;
+    }
+    
+    range[0][0] = p[0] - r / 2;
+    range[0][1] = p[0] + r / 2;
+    range[1][0] = p[1] - r / 2;
+    range[1][1] = p[1] + r / 2;
+    
+    if (range[0][0] < -MAX_RANGE / 2) {
+        range[0][0] = -MAX_RANGE / 2;
+        range[0][1] = r - MAX_RANGE / 2;
+    } else if (range[0][1] > MAX_RANGE / 2) {
+        range[0][0] = MAX_RANGE / 2 - r;
+        range[0][1] = MAX_RANGE / 2;
+    }
+    if (range[1][0] < -MAX_RANGE / 2) {
+        range[1][0] = -MAX_RANGE / 2;
+        range[1][1] = r - MAX_RANGE / 2;
+    } else if (range[1][1] > MAX_RANGE / 2) {
+        range[1][0] = MAX_RANGE / 2 - r;
+        range[1][1] = MAX_RANGE / 2;
+    }
+}
+
+function canvasOnMouseDown(e) {
+    e = e || window.event;
+    var pxPnt = [e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop];
+    var zoomIn = (e.which == 1);
+    
+    var r = range[0][1] - range[0][0];
+    var pnt = [(pxPnt[0] / N) * r + range[0][0], (pxPnt[1] / N) * r + range[1][0]];
+    
+    if (zoomIn) {
+        r /= 2;
+    } else {
+        r *= 2;
+    }
+    moveRange(pnt, r);
+    
+    resetMandel(plotMode);
+}
+
+function start() {
+    canvas = document.getElementById('main_canvas');
+    canvas.width = canvas.height = N;
+    canvas.onmousedown = canvasOnMouseDown;
+    canvas.oncontextmenu = function(){ return false; };
+    
+    ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, N, N);   
+    
+    var frags = window.location.href.split('#');
+    var args = [];
+    var plotMode = 0;
+    var range = null;
+    if (frags.length > 1) {
+        args = frags[1].split(',');
+    }
+    if (args.length >= 1) {
+        plotMode = parseInt(args[0]);
+    }
+    if (args.length >= 5) {
+        range = [[parseFloat(args[1]), parseFloat(args[2])],
+                 [parseFloat(args[3]), parseFloat(args[4])]];
+    }
+    resetMandel(plotMode, range);
+    
+    setInterval(step, 100);
+}

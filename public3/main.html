@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Mandelbrot Set</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="./css/app.css" type="text/css" media="all">
+    <link rel="stylesheet" href="./css/normalize.css" type="text/css" media="all">
+  </head>
+
+  <body>
+    <div> 
+      <span><a href="#" id="per-link">perma_link</a></span>
+      zoom:<input type="text" id="st-zoom" value="1" size="14"></input>
+      <button id="bt-zoomin">+</button>
+      <button id="bt-zoomout">-</button>
+      <span id="time">0.00</span> sec
+      <span id="status">calculating ...</span>
+
+      <div>
+	<button id="bt-reset">Reset</button>
+
+	<label >カラーリング</label>
+	<select id="coloring">
+	  <option value="bt-color-inout" selected>Inside / outside</option>
+	  <option value="bt-color-num">Iteration count</option>
+	  <option value="bt-color-frac-num">Fractional iterations</option>
+	  <option value="bt-color-frac">Fractional</option>
+	</select>
+	Step:<span id="st-step">0</span>
+      </div>
+    </div>
+
+    <div>
+      <canvas id="main_canvas"></canvas>
+    </div>
+    
+    <div>
+      <a href="http://mchouza.wordpress.com/2010/11/08/visualizing-the-mandelbrot-set-with-javascript/" target="_blank">http://mchouza.wordpress.com/2010/11/08/visualizing-the-mandelbrot-set-with-javascript/</a>
+    </div>
+    <div>
+      マウス右クリックで、クリック意図を中心に 2.0 倍に拡大表示。<br/>
+      マウス左クリックで、クリック意図を中心に 0.5 倍に縮小表示。<br/>
+      zoom 率表示エリアで拡大率を数指定することが可能。<br/>
+      link で現状の zoom,  表示位置の情報を含む URL を取得可能。
+    </div>
+    <script type="text/javascript" src="js/app.js"></script>
+  </body>
+</html>
