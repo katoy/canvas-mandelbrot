@@ -4,7 +4,8 @@
 getPlotmode = ->
     v = $("select").val()  
     ans = PLOT_INSIDE_OUTSIDE  if v is "bt-color-inout"
-    ans = PLOT_NUM_ITERATIONS  if v is "bt-color-num" 
+    ans = PLOT_NUM_ITERATIONS  if v is "bt-color-num"
+    ans = PLOT_NUM2_ITERATIONS  if v is "bt-color-num2" 
     ans = PLOT_FRAC_ITERATIONS if v is "bt-color-frac-num"
     ans = PLOT_FRAC            if v is "bt-color-frac"
     ans
@@ -38,8 +39,9 @@ MIN_RANGE = 0.0000000000000001 # 0.00000095367431640625
 
 PLOT_INSIDE_OUTSIDE = 0
 PLOT_NUM_ITERATIONS = 1
-PLOT_FRAC_ITERATIONS = 2
-PLOT_FRAC = 3
+PLOT_NUM2_ITERATIONS = 2
+PLOT_FRAC_ITERATIONS = 3
+PLOT_FRAC = 4
 
 range = null
 step_timer = null
@@ -57,6 +59,34 @@ genColor_Count = (cpe) ->
   [l, l, 255]
 
 # 描画方法 2
+genColor_Count2 = (cpe) ->
+  return [0, 0, 0]  if cpe.it < 0
+  base = 32
+  d = (cpe.it % base) * 256 / base
+  m = (d / 42.667) << 0
+  rgb = switch m
+    #blue -> cyan
+    when 0
+      [0, 6 * d, 255]
+    #cyan -> green
+    when 1
+      [0, 255, 255 - 6 * (d - 43)]
+    #green -> yellow
+    when 2
+      [6 * (d - 86), 255, 0]
+    #yellow -> red
+    when 3
+      [255, 255 - 6 * (d - 129), 0]
+    #red -> magenta
+    when 4
+      [255, 0, 6 * (d - 171)]
+    #magenta -> blue
+    when 5
+      [255 - 6 * (d - 214), 0, 255]
+    else
+      [6, 6, 6]
+
+# 描画方法 3
 genColor_CountZ = (cpe) ->
   zmod = Math.sqrt(cpe.z[0] * cpe.z[0] + cpe.z[1] * cpe.z[1])
   iterFra = cpe.it + 1 - Math.log(Math.log(zmod)) / LOG2
@@ -64,14 +94,14 @@ genColor_CountZ = (cpe) ->
   # [l, l, l]
   [l, l, 255]
         
-# 描画方法 3
+# 描画方法 4
 genColor_Z = (cpe) ->
   zmod = Math.sqrt(cpe.z[0] * cpe.z[0] + cpe.z[1] * cpe.z[1])
   r = zmod % 256
   g = cpe.it % 256
   [r, g, 255]
 
-genColorList = [genColor_InOut, genColor_Count, genColor_CountZ, genColor_Z]
+genColorList = [genColor_InOut, genColor_Count, genColor_Count2, genColor_CountZ, genColor_Z]
 
 # 中心位置と表示幅を指定して、表示領域を決める
 moveRange = (p, r) ->
@@ -212,7 +242,7 @@ step = (plotMode, mandelPlane, ctx) ->
         cpe.out = true
 
       color = if cpe.out then colorF(cpe) else [0, 0, 0]
-      ret_changed = true if (ret_changed is false) and (cpa[idx1] isnt color[0])
+      ret_changed = true if (ret_changed is false) and ( (cpa[idx1] isnt color[0]) or (cpa[idx1+1] isnt color[1]) or (cpa[idx1+2] isnt color[2]) )
       cpa[idx1++] = color[0]
       cpa[idx1++] = color[1]
       cpa[idx1++] = color[2]
