@@ -14,11 +14,14 @@ http://www.atopon.org/mandel/ のソースコードをベースにしていま�
 
 ![サンプル画面](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public/images/sample-screen.png)
 
-[デモ](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public/main.html)　(chrome でアクセスすることを奨励)
+[デモ1](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public/main.html)　(chrome でアクセスすることを奨励)
 
-[デモ](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public2/jsMandelbrot.html)　(chrome でアクセスすることを奨励)
+[デモ2](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public2/jsMandelbrot.html)　(chrome でアクセスすることを奨励)
 
-[デモ](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public3/main.html)　(chrome でアクセスすることを奨励)
+[デモ3](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public3/main.html)　(chrome でアクセスすることを奨励)
+
+[デモ4](http://homepage2.nifty.com/youichi_kato/src/canvas-mandelbrot/public4/main.html)　(chrome でアクセスすることを奨励)
+
 
 参考サイト
 ==========

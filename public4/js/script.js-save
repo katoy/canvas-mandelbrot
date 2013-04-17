@@ -1,0 +1,123 @@
+"use strict";
+
+/*global $*/
+
+$(function() {
+
+    var mandelbrot = new Mandelbrot();
+
+});
+
+var Mandelbrot = function() {
+    
+    // set some values
+    this.width = 500;
+    this.height = 500;
+   
+    this.x_center = -1.407566731001088;
+    this.y_center = 2.741525895538953e-10;
+    
+    this.iterations = 250;
+    this.escape = 4,
+    this.zoom = 10;
+    this.count = 0;
+    this.worker_size = 10;
+    this.received = 0;
+    this.refresh = true;
+
+    //let's go - create canvas, image data and workers
+    this.init();
+    //start animation loop
+    this.animate();
+
+};
+    
+Mandelbrot.prototype = {
+
+    init: function() {
+
+        var self = this;
+
+        //create main canvas and append it to div
+        var container = $("#content");
+
+        this.canvas = document.createElement("canvas");
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+
+        container.append(this.canvas);
+
+        //create imagedata
+        this.context = this.canvas.getContext("2d");
+        this.image = this.context.getImageData(0, 0, this.width, this.height);
+        this.data = new Int32Array(this.image.data.buffer);
+
+        //create imagedata for webworkers
+        this.worker_data = this.context.getImageData(0, 0, this.width, this.height / this.worker_size);
+
+        //create webworkers drop them in array
+        this.pool = [];
+        
+        for (var i = 0; i < this.worker_size; i++) {
+
+            this.pool[i] = new Worker("js/worker.js");
+            this.pool[i].idle = true;
+            this.pool[i].id = i;
+
+            //on webworker finished 
+            this.pool[i].onmessage = function(e) {
+
+                self.context.putImageData(e.data, 0, self.height / self.worker_size * e.target.id);
+                self.received++;
+
+            };
+
+        }
+    },
+
+    iterate: function() {
+    
+        for (var i = 0; i < this.pool.length; i++) {
+
+            this.pool[i].postMessage({
+        
+                image: this.worker_data,
+                id: this.pool[i].id,
+                worker_size: this.worker_size,
+                width: this.width,
+                height: this.height,
+                x_center: this.x_center,
+                y_center: this.y_center,
+                iterations: this.iterations,
+                escape: this.escape,
+                zoom: this.zoom
+
+            });
+        }
+    },
+
+    animate: function() {
+
+        requestAnimationFrame(this.animate.bind(this));
+
+        //poor man's benchmark over 250 frames
+        if (this.count === 0) {
+            console.time("timer");
+        } 
+        
+        if (this.count === 250) {
+            console.timeEnd("timer");
+        }
+
+        //refresh at init, then refresh when all webworkers are done and reset
+        if (this.received === this.worker_size | this.refresh) {
+            
+            this.received = 0;
+            this.refresh = false;
+            this.count++;
+            this.zoom *= 0.95;
+            this.iterate();
+
+        }
+    }
+};

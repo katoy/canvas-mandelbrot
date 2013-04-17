@@ -1,0 +1,41 @@
+self.onmessage = function(e) {
+
+    "use strict";
+
+    var x_step = e.data.zoom / e.data.width;
+    var y_step = e.data.zoom / e.data.height;
+
+    var y_start = e.data.height / e.data.worker_size * e.data.id;
+    var y_end = e.data.height / e.data.worker_size;
+   
+    var data = new Int32Array(e.data.image.data.buffer);
+        
+    for (var y = 0; y < y_end; y++) {
+
+        var iy = e.data.y_center - e.data.zoom / 2 + (y + y_start) * y_step;
+
+        for (var x = 0; x < e.data.width; x++) {
+
+            var rx = e.data.x_center - e.data.zoom / 2 + x * x_step;
+
+            var zx = rx;
+            var zy = iy;
+            var zx2 = 0;
+            var zy2 = 0;
+
+            for (var i = 0; zx2 + zy2 < e.data.escape && i < e.data.iterations; ++i) {
+
+                zx2 = zx * zx;
+                zy2 = zy * zy;
+                zy = (zx + zx) * zy + iy;
+                zx = zx2 - zy2 + rx;
+            }
+
+            data[y * e.data.width + x] = (255 << 24) | (i << 16) | (i << 8) | i;
+
+        }
+    }
+
+    self.postMessage(e.data.image);
+
+};
